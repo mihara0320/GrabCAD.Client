@@ -4,6 +4,10 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ExternalModule } from './externals/external.module';
+import { PipesModule } from './pipes/pipes.module';
+import { ServicesModule } from './services/services.module';
+import { HubService } from './services/hub.service';
+import { PlayerLimitGuard } from './services/player-limit.guard';
 
 const MODULES = [
   CommonModule,
@@ -11,6 +15,8 @@ const MODULES = [
   FormsModule,
   ReactiveFormsModule,
   ExternalModule,
+  PipesModule,
+  ServicesModule
 ];
 
 @NgModule({
@@ -22,7 +28,9 @@ export class SharedModule {
     return {
       ngModule: SharedModule,
       providers: [
-        // interceptors come here if needed
+        // singleton services
+        HubService,
+        PlayerLimitGuard
       ]
     };
   }
