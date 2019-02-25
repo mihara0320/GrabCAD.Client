@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { HubService } from '@shared/services/hub.service';
 
 
 @Component({
@@ -9,7 +8,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent {
-
-  constructor() {
-  }
+  constructor(
+    public hub: HubService
+  ) { }
 }

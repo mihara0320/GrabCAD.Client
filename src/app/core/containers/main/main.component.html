@@ -1,5 +1,6 @@
 <app-navbar>
-
+  <span> Current Players: <strong> {{ hub.players$ | async }} </strong></span>
+  <span> Your Id: <strong> {{ hub.connectionId$ | async }}</strong> </span>
 </app-navbar>
 
 <mat-drawer-container fxFlex='grow'>
@@ -9,7 +10,6 @@
   </mat-drawer>
 
   <mat-drawer-content class="sidenav-content">
-    test
     <router-outlet></router-outlet>
   </mat-drawer-content>
 
