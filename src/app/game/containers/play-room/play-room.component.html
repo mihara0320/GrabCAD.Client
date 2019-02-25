@@ -1,3 +1,27 @@
-<p>
-  play-room works!
-</p>
+<h1>Players</h1>
+
+<h2> {{ players | json }} </h2>
+
+<button mat-button
+        (click)="getPlayers()"> Get </button>
+
+<h1>Challenge</h1>
+
+<h2> {{ challenge | json }} </h2>
+
+<button mat-button
+        (click)="getChallenge()"> Get </button>
+
+
+<h1>Answers</h1>
+
+<h2> {{ value | json }} </h2>
+
+<button mat-button
+        (click)="getAnswers()"> Get </button>
+
+
+<button mat-button
+        (click)="addAnswer('true')"> YES </button>
+<button mat-button
+        (click)="addAnswer('false')"> NO </button>
