@@ -1,11 +1,18 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { MenuComponent } from '@core/containers/menu/menu.component';
+import { PlayerLimitGuard } from '@shared/services/player-limit.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'game', pathMatch: 'full' },
+  { path: '', redirectTo: 'menu', pathMatch: 'full' },
+  {
+    path: 'menu',
+    component: MenuComponent
+  },
   {
     path: 'game',
-    loadChildren: './game/game.module#GameModule',
+    canLoad: [PlayerLimitGuard],
+    loadChildren: './game/game.module#GameModule'
   },
   { path: '**', redirectTo: 'game' }
 ];
