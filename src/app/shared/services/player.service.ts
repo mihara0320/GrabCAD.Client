@@ -23,9 +23,9 @@ export class PlayerService {
     };
   }
 
-  getScores(): Observable<any> {
-    return this._http.get(`${environment.api}/players`);
-  }
+  // getScores(): Observable<any> {
+  //   return this._http.get(`${environment.api}/players`);
+  // }
 
   addPlayer(player: Player): Observable<any> {
     return this._http.post(`${environment.api}/players/add`, player, this._httpOptions).pipe(
