@@ -1,21 +1,21 @@
+<h3 class='box-header'>Math Callenge</h3>
+<mat-card class="mat-elevation-z8">
+  <mat-card-content>
+    <h2> {{ challenge }} </h2>
+  </mat-card-content>
+  <mat-card-actions align='end'>
+    <button mat-button
+            color="primary"
+            [disabled]="answered"
+            (click)="addAnswer('true')"> YES </button>
+
+    <button mat-button
+            color="primary"
+            [disabled]="answered"
+            (click)="addAnswer('false')"> NO </button>
+  </mat-card-actions>
+</mat-card>
+
+
+<h3 class='box-header'>Score Board</h3>
 <app-score-board [scores]="hub.scores$"></app-score-board>
-
-
-<h1>Challenge</h1>
-
-<h2> {{ challenge }} </h2>
-
-
-<h1>Answers</h1>
-
-<h2> {{ value | json }} </h2>
-
-<button mat-raised-button
-        color="primary"
-        [disabled]="answered"
-        (click)="addAnswer('true')"> YES </button>
-
-<button mat-raised-button
-        color="primary"
-        [disabled]="answered"
-        (click)="addAnswer('false')"> NO </button>
