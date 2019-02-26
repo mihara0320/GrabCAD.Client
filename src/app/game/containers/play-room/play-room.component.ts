@@ -1,12 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GameService } from '@shared/services/game.service';
-import { HubConnection } from '@aspnet/signalr';
-import * as signalR from '@aspnet/signalr';
-import { environment } from '@environments/environment';
 import { HubService } from '@shared/services/hub.service';
 import { PlayerService } from '@shared/services/player.service';
-import { take } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-play-room',
@@ -23,24 +19,37 @@ export class PlayRoomComponent implements OnInit, OnDestroy {
     public hub: HubService,
     public game: GameService,
     public player: PlayerService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
     this.hub.connectionId$.subscribe(connectionId => {
-        this.connectionId = connectionId;
-        this.player.addPlayer({ connectionId: this.connectionId }).subscribe();
-      });
+      this.connectionId = connectionId;
+      this.player.addPlayer({ connectionId: this.connectionId }).subscribe();
+    });
 
     this.hub.challenge$.subscribe(challege => {
       this.challenge = challege;
       this.answered = false;
     });
 
-  }
+    this.hub.answerFound$.subscribe(answer => {
+      this.toastr.info('Next Round Starts in 5 Sec', `${answer.connectionId} Found Answer`);
+    });
 
-  // getChallenge() {
-  //   this.game.getChallenge().subscribe(data => this.challenge = data);
-  // }
+    this.hub.answerRecieved$.subscribe(answer => {
+      if (answer.connectionId !== this.connectionId) { return; }
+
+      if (answer.firstCorrectAnswer) {
+        this.toastr.success('+1 point', 'Correct');
+      }
+
+      if (!answer.correctAnswer) {
+        this.toastr.error('-1 point', 'Incorrect');
+      }
+    });
+
+  }
 
   addAnswer(answer: boolean) {
     this.game.addAnswer({ connectionId: this.connectionId, answer: answer }).subscribe();
