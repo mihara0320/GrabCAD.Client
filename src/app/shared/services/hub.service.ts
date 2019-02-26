@@ -10,6 +10,7 @@ import { tap, delay } from 'rxjs/operators';
 })
 export class HubService {
   public _hubConnection: HubConnection;
+  private playerCount: number;
 
   private connectionIdSubject = new ReplaySubject<string>();
   public connectionId$: Observable<string>;
@@ -29,9 +30,9 @@ export class HubService {
     this.connectionId$ = this.connectionIdSubject.asObservable();
     this.scores$ = this.scoresSubject.asObservable();
     this.challenge$ = this.challengeSubject.asObservable().pipe(
-      delay(500),
+      delay(this.getRequestDelay()), // to avoid simultaious request wtih other clients
       tap(challenge => {
-        if (challenge == null) {
+        if (challenge == null && this.playerCount === 1) {
           this._hubConnection.invoke('RequestNextChallenge');
         }
       })
@@ -51,12 +52,18 @@ export class HubService {
       })
       .catch(err => console.error(err.toString()));
 
-    this._hubConnection.on('playerUpdate', n => this.playersSubject.next(n));
+    this._hubConnection.on('playerUpdate', n => {
+      this.playerCount = n;
+      this.playersSubject.next(n);
+    });
     this._hubConnection.on('scoreUpdate', scores => this.scoresSubject.next(scores));
     this._hubConnection.on('challengeUpdate', challenge => this.challengeSubject.next(challenge));
   }
 
   private getConnectionId(): Promise<string> {
     return this._hubConnection.invoke('getConnectionId');
+  }
+  private getRequestDelay(): number {
+    return Math.random() * (600 - 100) + 100;
   }
 }
