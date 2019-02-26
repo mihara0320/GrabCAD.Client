@@ -6,6 +6,7 @@ import { environment } from '@environments/environment';
 import { HubService } from '@shared/services/hub.service';
 import { PlayerService } from '@shared/services/player.service';
 import { take } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-play-room',
@@ -13,12 +14,10 @@ import { take } from 'rxjs/operators';
   styleUrls: ['./play-room.component.scss']
 })
 export class PlayRoomComponent implements OnInit, OnDestroy {
-  private _hubConnection: HubConnection;
   private connectionId: string;
 
-  challenge: any;
-  value: any;
-  players: any;
+  challenge: string;
+  answered: boolean;
 
   constructor(
     public hub: HubService,
@@ -27,37 +26,25 @@ export class PlayRoomComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this._hubConnection = this.hub._hubConnection;
-
-    this._hubConnection.on('AnswerRecieved', (data: any) => {
-      const received = `Received: ${data}`;
-      console.log(JSON.stringify(data));
-    });
-
-    this._hubConnection.on('AnswerFound', (data: any) => {
-      const received = `AnswerFound: ${data}`;
-      console.log(JSON.stringify(data));
-    });
-
-    // this._hubConnection.on('RequestNextChallenge', () => {
-    //   console.log('RequestNextChallenge');
-    // });
     this.hub.connectionId$.subscribe(connectionId => {
         this.connectionId = connectionId;
         this.player.addPlayer({ connectionId: this.connectionId }).subscribe();
       });
+
+    this.hub.challenge$.subscribe(challege => {
+      this.challenge = challege;
+      this.answered = false;
+    });
+
   }
 
-  getChallenge() {
-    this.game.getChallenge().subscribe(data => this.challenge = data);
-  }
-
-  getAnswers() {
-    this.game.getAnswers().subscribe(data => this.value = data);
-  }
+  // getChallenge() {
+  //   this.game.getChallenge().subscribe(data => this.challenge = data);
+  // }
 
   addAnswer(answer: boolean) {
     this.game.addAnswer({ connectionId: this.connectionId, answer: answer }).subscribe();
+    this.answered = true;
   }
 
   ngOnDestroy() {

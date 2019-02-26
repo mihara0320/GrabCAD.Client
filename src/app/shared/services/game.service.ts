@@ -18,10 +18,6 @@ export class GameService {
     };
   }
 
-  getChallenge(): Observable<any> {
-    return this._http.get(`${environment.api}/games/challenge`);
-  }
-
   getAnswers(): Observable<any> {
     return this._http.get(`${environment.api}/games/answers`);
   }
