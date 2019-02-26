@@ -14,6 +14,6 @@ export class MenuComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.hub.players$.subscribe(n => this.playerCount);
+    this.hub.players$.subscribe(n => this.playerCount = n);
   }
 }
